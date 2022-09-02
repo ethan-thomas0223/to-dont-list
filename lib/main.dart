@@ -1,4 +1,7 @@
 // Started with https://docs.flutter.dev/development/ui/widgets-intro
+import 'dart:ffi';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:to_dont_list/to_do_items.dart';
 
@@ -36,12 +39,13 @@ class _ToDoListState extends State<ToDoList> {
             ),
             actions: <Widget>[
               ElevatedButton(
-                key: const Key("OkButton"),
+                key: const Key("OKButton"),
                 style: yesStyle,
-                child: const Text('OK'),
+                child: const Text('Ok'),
                 onPressed: () {
                   setState(() {
-                    Navigator.pop(context);
+                    //Navigator.pop(context);
+                    Navigator.pushNamed(context, Navigator.defaultRouteName);
                   });
                 },
               ),
