@@ -39,13 +39,16 @@ class _ToDoListState extends State<ToDoList> {
             ),
             actions: <Widget>[
               ElevatedButton(
-                key: const Key("OKButton"),
-                style: yesStyle,
-                child: const Text('Ok'),
+                key: const Key("CancelButton"),
+                style: noStyle,
+                child: const Text('Cancel'),
                 onPressed: () {
                   setState(() {
+                    //These 2 lines fail the test not sure why
+                    //_handleNewItem(valueText);
                     //Navigator.pop(context);
-                    Navigator.pushNamed(context, Navigator.defaultRouteName);
+                    //Not sure why defaultRouteName works here, feels like the route should be specified
+                    //Navigator.pushNamed(context, Navigator.defaultRouteName);
                   });
                 },
               ),
@@ -55,8 +58,8 @@ class _ToDoListState extends State<ToDoList> {
                 valueListenable: _inputController,
                 builder: (context, value, child) {
                   return ElevatedButton(
-                    key: const Key("CancelButton"),
-                    style: noStyle,
+                    key: const Key("OKButton"),
+                    style: yesStyle,
                     onPressed: value.text.isNotEmpty
                         ? () {
                             setState(() {
@@ -65,7 +68,7 @@ class _ToDoListState extends State<ToDoList> {
                             });
                           }
                         : null,
-                    child: const Text('Cancel'),
+                    child: const Text('Ok'),
                   );
                 },
               ),
@@ -111,7 +114,7 @@ class _ToDoListState extends State<ToDoList> {
   void _handleNewItem(String itemText) {
     setState(() {
       print("Adding new item");
-      Item item = const Item(name: "itemText");
+      Item item = Item(name: itemText);
       items.insert(0, item);
       _inputController.clear();
     });
