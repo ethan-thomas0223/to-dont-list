@@ -1,9 +1,13 @@
 // Started with https://docs.flutter.dev/development/ui/widgets-intro
 import 'dart:ffi';
-
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:to_dont_list/to_do_items.dart';
+
+//https://educity.app/flutter/how-to-pick-an-image-from-gallery-and-display-it-in-flutter
+import 'package:image_picker/image_picker.dart';
 
 class ToDoList extends StatefulWidget {
   const ToDoList({super.key});
@@ -19,6 +23,9 @@ class _ToDoListState extends State<ToDoList> {
       textStyle: const TextStyle(fontSize: 20), primary: Colors.green);
   final ButtonStyle noStyle = ElevatedButton.styleFrom(
       textStyle: const TextStyle(fontSize: 20), primary: Colors.red);
+  //final ImageButtonInputElement _imageContoller = ImageButtonInputElement();
+
+  late File image;
 
   Future<void> _displayTextInputDialog(BuildContext context) async {
     print("Loading Dialog");
@@ -72,6 +79,27 @@ class _ToDoListState extends State<ToDoList> {
                   );
                 },
               ),
+              //Want to add image selector -- https://medium.com/unitechie/flutter-tutorial-image-picker-from-camera-gallery-c27af5490b74
+              MaterialButton(
+                  color: Colors.red,
+                  child: const Text('Select Image From Gallery'),
+                  onPressed: () {
+                    File? image;
+
+                    // ignore: unused_element
+                    Future pickImage() async {
+                      try {
+                        final image = await ImagePicker()
+                            .pickImage(source: ImageSource.gallery);
+                        if (image == null) return;
+
+                        final imageTemp = File(image.path);
+                        setState(() => this.image = imageTemp);
+                      } on PlatformException catch (e) {
+                        print('Failed to pick image: $e');
+                      }
+                    }
+                  })
             ],
           );
         });
