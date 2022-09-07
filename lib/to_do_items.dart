@@ -69,3 +69,17 @@ class ToDoListItem extends StatelessWidget {
     );
   }
 }
+
+class Picture extends StatelessWidget {
+  Picture({required this.url});
+
+  final String url;
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.network(url);
+    //throw UnimplementedError();
+  }
+
+  void insert(int i, Picture pic) {}
+}

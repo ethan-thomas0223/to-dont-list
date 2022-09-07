@@ -19,6 +19,8 @@ class _ToDoListState extends State<ToDoList> {
       textStyle: const TextStyle(fontSize: 20), primary: Colors.green);
   final ButtonStyle noStyle = ElevatedButton.styleFrom(
       textStyle: const TextStyle(fontSize: 20), primary: Colors.red);
+  final ButtonStyle iStyle = ElevatedButton.styleFrom(
+      textStyle: const TextStyle(fontSize: 20), primary: Colors.blue);
 
   Future<void> _displayTextInputDialog(BuildContext context) async {
     print("Loading Dialog");
@@ -26,7 +28,7 @@ class _ToDoListState extends State<ToDoList> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Item To Add'),
+            title: const Text('Image Description'),
             content: TextField(
               onChanged: (value) {
                 setState(() {
@@ -46,7 +48,7 @@ class _ToDoListState extends State<ToDoList> {
                   setState(() {
                     //These 2 lines fail the test not sure why
                     //_handleNewItem(valueText);
-                    //Navigator.pop(context);
+                    Navigator.pop(context);
                     //Not sure why defaultRouteName works here, feels like the route should be specified
                     //Navigator.pushNamed(context, Navigator.defaultRouteName);
                   });
@@ -72,6 +74,36 @@ class _ToDoListState extends State<ToDoList> {
                   );
                 },
               ),
+              ValueListenableBuilder(
+                  valueListenable: _inputController,
+                  builder: (context, value, child) {
+                    return ElevatedButton(
+                      style: iStyle,
+                      key: const Key('imageButton'),
+                      onPressed: valueText.isNotEmpty
+                          ? () {
+                              ValueListenableBuilder(
+                                valueListenable: _inputController,
+                                builder: (context, value, child) {
+                                  return ElevatedButton(
+                                      style: iStyle,
+                                      key: const Key('Image URL'),
+                                      onPressed: valueText.isNotEmpty
+                                          ? () {
+                                              _handleNewPic(valueText);
+                                              Navigator.pop(context);
+                                            }
+                                          : null,
+                                      child: const Text('Select'));
+                                },
+                              );
+                              //_handleNewItem(valueText);
+                              //Navigator.pop(context);
+                            }
+                          : null,
+                      child: const Text('Image'),
+                    );
+                  })
             ],
           );
         });
@@ -79,7 +111,7 @@ class _ToDoListState extends State<ToDoList> {
 
   String valueText = "";
 
-  final List<Item> items = [const Item(name: "add more todos")];
+  final List<Item> items = [const Item(name: "add more Images")];
 
   final _itemSet = <Item>{};
 
@@ -116,6 +148,15 @@ class _ToDoListState extends State<ToDoList> {
       print("Adding new item");
       Item item = Item(name: itemText);
       items.insert(0, item);
+      _inputController.clear();
+    });
+  }
+
+  void _handleNewPic(String itemText) {
+    setState(() {
+      print("Adding new item");
+      Picture pic = Picture(url: itemText);
+      pic.insert(0, pic);
       _inputController.clear();
     });
   }
