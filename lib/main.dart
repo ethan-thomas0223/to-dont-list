@@ -82,21 +82,42 @@ class _ToDoListState extends State<ToDoList> {
                       key: const Key('imageButton'),
                       onPressed: valueText.isNotEmpty
                           ? () {
-                              ValueListenableBuilder(
-                                valueListenable: _inputController,
-                                builder: (context, value, child) {
-                                  return ElevatedButton(
-                                      style: iStyle,
-                                      key: const Key('Image URL'),
-                                      onPressed: valueText.isNotEmpty
-                                          ? () {
-                                              _handleNewPic(valueText);
-                                              Navigator.pop(context);
-                                            }
-                                          : null,
-                                      child: const Text('Select'));
-                                },
+                              showDialog(
+                                context: context,
+                                builder: ((context) {
+                                  return AlertDialog(
+                                    title: const Text('Image Url'),
+                                    content: TextField(
+                                      onChanged: (value) {
+                                        setState(() {
+                                          vtext = value;
+                                        });
+                                      },
+                                      controller: _inputController,
+                                      decoration: const InputDecoration(
+                                          hintText: "type something here"),
+                                    ),
+                                    actions: <Widget>[
+                                      ValueListenableBuilder(
+                                        valueListenable: _inputController,
+                                        builder: (context, value, child) {
+                                          return ElevatedButton(
+                                              style: iStyle,
+                                              key: const Key('Image URL'),
+                                              onPressed: vtext.isNotEmpty
+                                                  ? () {
+                                                      _handleNewPic(vtext);
+                                                      Navigator.pop(context);
+                                                    }
+                                                  : null,
+                                              child: const Text('Select'));
+                                        },
+                                      )
+                                    ],
+                                  );
+                                }),
                               );
+
                               //_handleNewItem(valueText);
                               //Navigator.pop(context);
                             }
@@ -110,6 +131,7 @@ class _ToDoListState extends State<ToDoList> {
   }
 
   String valueText = "";
+  String vtext = "";
 
   final List<Item> items = [const Item(name: "add more Images")];
 
