@@ -69,3 +69,13 @@ class ToDoListItem extends StatelessWidget {
     );
   }
 }
+
+class Pic {
+  const Pic({required this.url});
+
+  final String url;
+
+  String getPic() {
+    return url;
+  }
+}

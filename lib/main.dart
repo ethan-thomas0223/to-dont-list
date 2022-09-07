@@ -33,7 +33,7 @@ class _ToDoListState extends State<ToDoList> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Item To Add'),
+            title: const Text('Add Description'),
             content: TextField(
               onChanged: (value) {
                 setState(() {
@@ -52,8 +52,8 @@ class _ToDoListState extends State<ToDoList> {
                 onPressed: () {
                   setState(() {
                     //These 2 lines fail the test not sure why
-                    //_handleNewItem(valueText);
-                    //Navigator.pop(context);
+                    _handleNewItem(valueText);
+                    Navigator.pop(context);
                     //Not sure why defaultRouteName works here, feels like the route should be specified
                     //Navigator.pushNamed(context, Navigator.defaultRouteName);
                   });
@@ -82,7 +82,7 @@ class _ToDoListState extends State<ToDoList> {
               //Want to add image selector -- https://medium.com/unitechie/flutter-tutorial-image-picker-from-camera-gallery-c27af5490b74
               MaterialButton(
                   color: Colors.red,
-                  child: const Text('Select Image From Gallery'),
+                  child: const Text('Select Image'),
                   onPressed: () {
                     File? image;
 
@@ -91,6 +91,7 @@ class _ToDoListState extends State<ToDoList> {
                       try {
                         final image = await ImagePicker()
                             .pickImage(source: ImageSource.gallery);
+                        //.pickImage(source: ImageSource.camera);
                         if (image == null) return;
 
                         final imageTemp = File(image.path);
