@@ -1,4 +1,4 @@
-# A list like photo album
+# A list-like photo album
 
 A Flutter practice project.
 
@@ -10,6 +10,7 @@ By copy and pasting the image link into a test box and writing a short descripti
 and the image description that you wrote. 
 
 * https://c4.wallpaperflare.com/wallpaper/87/851/622/laptop-backgrounds-nature-images-1920x1200-wallpaper-thumb.jpg
+
 sample image used
 
 This is a useful application as you come across interesting images all the time that could be used for later projects, this app would gie you a place to save those links for you to grab again later. The app is intuitive and easy to use, so its userface is not a burden for you to navigate. 
