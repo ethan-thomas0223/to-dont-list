@@ -26,6 +26,17 @@ void main() {
     expect(item.url, '');
   });
 
+// this shouldn't be fialing
+  testWidgets('Picture can be created', (tester) async {
+    var pic = Picture(
+        url:
+            'https://c4.wallpaperflare.com/wallpaper/87/851/622/laptop-backgrounds-nature-images-1920x1200-wallpaper-thumb.jpg');
+    expect(
+        pic,
+        Picture(
+            url:
+                'https://c4.wallpaperflare.com/wallpaper/87/851/622/laptop-backgrounds-nature-images-1920x1200-wallpaper-thumb.jpg'));
+  });
   // Yes, you really need the MaterialApp and Scaffold
   testWidgets('ToDoListItem has a text', (tester) async {
     await tester.pumpWidget(MaterialApp(
