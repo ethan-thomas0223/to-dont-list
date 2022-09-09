@@ -1,22 +1,35 @@
-# To Don't List
+# A list like photo album
 
-A Flutter Demo project.
+A Flutter practice project.
 
-## Edit Me
+## Photo Album
 
-This is the file you should edit to describe your modified app.
+This app was built as part of a computer science class for anyone to use,off of a to-do list framework and modified to house images that you come across that you might want to use later. 
 
-A README.md is written using [Markdown](https://www.markdownguide.org/), a simple language for formatting text that can be rendered as a web page. This README.md information will be displayed on the GitHub main page for your repository. Here is a resource specifically for Markdown syntax and GitHub.
+By copy and pasting the image link into a test box and writing a short description, you can see the image link, small preview of the image, 
+and the image description that you wrote. 
 
-* <https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax>
+* https://c4.wallpaperflare.com/wallpaper/87/851/622/laptop-backgrounds-nature-images-1920x1200-wallpaper-thumb.jpg
+sample image used
 
-Now, with a text editor on your cloned repository, or by clicking on the edit icon ✏️ on the main github.com page for your forked repository, edit the README.md file in the root directory to provide details about your app’s functionality. Be sure to follow the guidelines of the GitHub documentation on what to include in your README.md file.
+This is a useful application as you come across interesting images all the time that could be used for later projects, this app would gie you a place to save those links for you to grab again later. The app is intuitive and easy to use, so its userface is not a burden for you to navigate. 
+
+
+## Screenshots:
+
+
+
+
+
+<img width="241" alt="to-dont1" src="https://user-images.githubusercontent.com/89748025/189260791-ae38e7c4-5e5a-469b-9053-6c9f20328209.png">
+
+
+<img width="239" alt="to-dont2" src="https://user-images.githubusercontent.com/89748025/189260816-389c256d-9ba0-4906-ae14-86a87a7da469.png">
+
+
+<img width="240" alt="to-dont3" src="https://user-images.githubusercontent.com/89748025/189260828-94e708a7-5256-4641-a159-a39822afd831.png">
+
 
 * <https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes>
 
-The most important pieces to include right now are
 
-* Who is the audience for this app
-* What the app does
-* Why the app is useful
-* Multiple Screenshots of your app
