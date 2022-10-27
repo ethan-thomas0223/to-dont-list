@@ -13,7 +13,7 @@ import 'package:to_dont_list/to_do_items.dart';
 
 void main() {
   test('Item abbreviation should be first letter', () {
-    const cars = Car(makemodel: 'Nissan', package: '1', priceestimate: '150');
+    const cars = Car(makemodel: 'Nissan', package: '1', priceestimate: 150);
     expect(cars.abbrev(), "N");
   });
 
@@ -23,13 +23,11 @@ void main() {
         home: Scaffold(
             body: ToDoListItem(
                 cars: const Car(
-                    makemodel: 'test1',
-                    package: 'test2',
-                    priceestimate: 'test3'),
+                    makemodel: 'test1', package: 'test2', priceestimate: 3),
                 completed: true,
                 onListChanged: (bool completed, Car car) {},
                 onDeleteItem: (Car cars) {}))));
-    final mmFinder = find.text("test1" + ", " + "test2" + ", " + 'test3');
+    final mmFinder = find.text("test1" + ", " + "test2" + ", " + '3');
 
     expect(mmFinder, findsWidgets);
   });
@@ -40,7 +38,7 @@ void main() {
         home: Scaffold(
             body: ToDoListItem(
                 cars: const Car(
-                    makemodel: 'test', package: 'test', priceestimate: 'test'),
+                    makemodel: 'test', package: 'test', priceestimate: 3),
                 completed: true,
                 onListChanged: (bool completed, Car car) {},
                 onDeleteItem: (Car cars) {}))));
@@ -72,29 +70,38 @@ void main() {
 
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pump(); // Pump after every action to rebuild the widgets
-    expect(find.text("hi"), findsNothing);
-    expect(find.text("1"), findsNothing);
+    expect(find.text("Nissan"), findsNothing);
+    expect(find.text("2"), findsNothing);
     expect(find.text("100"), findsNothing);
 
-    await tester.enterText(find.byKey(Key("MMKey")), 'hi');
+    await tester.enterText(find.byKey(Key("MMKey")), 'Nissan');
     await tester.pump();
-    expect(find.text("hi"), findsOneWidget);
+    expect(find.text("Nissan"), findsOneWidget);
 
-    await tester.enterText(find.byKey(Key("PackKey")), '1');
+    await tester.enterText(find.byKey(Key("PackKey")), '2');
     await tester.pump();
-    expect(find.text("1"), findsOneWidget);
+    expect(find.text("2"), findsOneWidget);
 
-    await tester.enterText(find.byKey(Key("PEKey")), '100');
+    await tester.enterText(find.byKey(Key("PEKey")), "100");
     await tester.pump();
     expect(find.text("100"), findsOneWidget);
 
     await tester.tap(find.byKey(const Key("OKButton")));
     await tester.pump();
-    expect(find.text("hi" + ", " + "1" + ", " + '100'), findsWidgets);
+    expect(find.text("Nissan" + ", " + "2" + ", " + '100'), findsWidgets);
 
     final listItemFinder = find.byType(ToDoListItem);
 
     expect(listItemFinder, findsNWidgets(2));
+  });
+
+  testWidgets("Testing functionality of the average button", (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: DetailList()));
+    await tester.pump();
+
+    await tester.tap(find.byKey(const Key("AverageKey")));
+    await tester.pump();
+    expect(find.byKey(const Key("AverageKey")), findsOneWidget);
   });
 
   // One to test the tap and press actions on the items?

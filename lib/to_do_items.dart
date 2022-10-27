@@ -1,4 +1,4 @@
-import 'dart:html';
+//import 'dart:html';
 
 import 'package:flutter/material.dart';
 
@@ -13,7 +13,6 @@ class Item {
 }
 
 class Car {
-  
   const Car(
       {required this.makemodel,
       required this.package,
@@ -21,15 +20,12 @@ class Car {
 
   final String makemodel;
   final String package;
-  final String priceestimate;
+  final int priceestimate;
 
   String abbrev() {
     return makemodel.substring(0, 1);
   }
-  }
-
-
-
+}
 
 typedef ToDoListChangedCallback = Function(bool completed, Car cars);
 typedef ToDoListRemovedCallback = Function(Car car);
@@ -67,7 +63,7 @@ class ToDoListItem extends StatelessWidget {
     );
   }
 
- // _detailCounter(BuildContext)
+  // _detailCounter(BuildContext)
 
   @override
   Widget build(BuildContext context) {
@@ -85,10 +81,13 @@ class ToDoListItem extends StatelessWidget {
         child: Text(cars.abbrev()),
       ),
       title: Text(
-        cars.makemodel + ', ' + cars.package + ', ' + cars.priceestimate,
+        cars.makemodel +
+            ', ' +
+            cars.package +
+            ', ' +
+            cars.priceestimate.toString(),
         style: _getTextStyle(context),
       ),
     );
   }
 }
-

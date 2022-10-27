@@ -1,5 +1,5 @@
 // Started with https://docs.flutter.dev/development/ui/widgets-intro
-import 'dart:io';
+//import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:to_dont_list/to_do_items.dart';
@@ -53,9 +53,10 @@ class _DetailListState extends State<DetailList> {
                       hintText: "Select Package 1, 2, or 3")),
               TextField(
                   key: Key("PEKey"),
+                  //keyboardType: TextInputType.number,
                   onChanged: (value) {
                     setState(() {
-                      PriceEstimateText = value;
+                      PriceEstimateText = int.parse(value);
                     });
                   },
                   controller: _PriceEstimateController,
@@ -98,7 +99,10 @@ class _DetailListState extends State<DetailList> {
           );
         });
   }
+
   int _detailcounter = 0;
+
+  int _totalDetailCost = 0;
 
   String valueText = "";
 
@@ -106,17 +110,17 @@ class _DetailListState extends State<DetailList> {
 
   String PackageText = "";
 
-  String PriceEstimateText = "";
+  int PriceEstimateText = 0;
 
   final List<Car> cars1 = [
-    const Car(makemodel: "Nissan", package: "1", priceestimate: "100")
+    const Car(makemodel: "Nissan Example", package: "Ex: 1", priceestimate: 100)
   ];
 //Need to find a way to display all text across banner rather than just 1st text
 
   final _carSet = <Car>{};
 
   final Car cars = const Car(
-      makemodel: " Nissan Altima S", package: " 1", priceestimate: " 100");
+      makemodel: " Nissan Altima S", package: " 1", priceestimate: 100);
   //Example
 
   void _handleListChanged(bool completed, Car car) {
@@ -143,16 +147,19 @@ class _DetailListState extends State<DetailList> {
     setState(() {
       print("Deleting item");
       cars1.remove(Car);
+      _totalDetailCost -= Car.priceestimate;
+      _detailcounter--;
     });
   }
 
   void _handleNewItem(
-      String itemText, String makeModel, String package, String priceEstimate) {
+      String itemText, String makeModel, String package, int priceEstimate) {
     setState(() {
       print("Adding new item");
       Car cars = Car(
           makemodel: makeModel, package: package, priceestimate: priceEstimate);
       cars1.insert(0, cars);
+      _totalDetailCost += priceEstimate;
       _MakeModelController.clear();
       _PackageController.clear();
       _PriceEstimateController.clear();
@@ -165,23 +172,57 @@ class _DetailListState extends State<DetailList> {
     });
   }
 
+  double _displayAverage(int totalCash, int totalDetails) {
+    if (totalDetails != 0) {
+      return totalCash / totalDetails;
+    }
+    return 0;
+  }
+
+  Future<void> _averageDetail(BuildContext context) async {
+    print("Loading Average Dialog");
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Detail Average'),
+            content: SizedBox(
+              width: 100,
+              height: 60,
+              child: Text(
+                  "Detail Average is \$${_displayAverage(_totalDetailCost, _detailcounter)}"),
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                key: const Key("OKButton"),
+                style: yesStyle,
+                child: const Text('Leave'),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: const Text('G-hops Detailing List'),
         ),
-        body:
-         Column(
-         // padding: const EdgeInsets.symmetric(vertical: 8.0),
+        body: Column(
+          // padding: const EdgeInsets.symmetric(vertical: 8.0),
           children:
-       //     Text(
-        //    '$_detailcounter'
-       //     )
-      //    ],
-      
+              //     Text(
+              //    '$_detailcounter'
+              //     )
+              //    ],
 
-          cars1.map((Car) {
+              cars1.map((Car) {
             return ToDoListItem(
               cars: Car,
               completed: _carSet.contains(Car),
@@ -189,21 +230,27 @@ class _DetailListState extends State<DetailList> {
               onDeleteItem: _handleDeleteItem,
             );
           }).toList(),
-          
-          ),
-          bottomNavigationBar: 
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text(
-                'Details:'
-              ),
-               Text(
-            '$_detailcounter'
+        ),
+        bottomNavigationBar: Padding(
+          padding: EdgeInsets.all(10),
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            Wrap(
+              spacing: 2, // set spacing here
+              children: <Widget>[
+                Text("Details:"),
+                Text('$_detailcounter'),
+              ],
             ),
-            ]),
-          ),
-
+            ElevatedButton(
+              key: const Key("AverageKey"),
+              child: const Text("Average Detail Price"),
+              onPressed: () {
+                _averageDetail(context);
+              },
+            )
+          ]),
+        ),
         floatingActionButton: FloatingActionButton(
             child: const Icon(Icons.add),
             onPressed: () {
