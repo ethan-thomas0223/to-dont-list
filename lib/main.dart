@@ -265,7 +265,7 @@ class _DetailListState extends State<DetailList> {
 
             //press this button and takes to analytics page
             ElevatedButton(
-              key: const Key('Analytics'),
+              key: const Key('AnalyticsKey'),
               child: Text('Analytics'),
               onPressed: _toAnalyticsPage,
             )
@@ -292,10 +292,10 @@ class Analytics_page extends StatefulWidget {
 class _AnalyticsPageState extends State<Analytics_page> {
   //loop through list of - count the most common stuff
   //will then return a dictionary/widget to house it
-  var carCounts = {};
-  var planCounts = {};
-  var costCounts = {};
-  var resultList = [];
+  static var carCounts = {};
+  static var planCounts = {};
+  static var costCounts = {};
+  static var resultList = [];
   //checks if in dic and adds to counter
   //else initializes in dic
   void valCheck(val, dic) {
@@ -310,15 +310,16 @@ class _AnalyticsPageState extends State<Analytics_page> {
     int max = 0;
     var keyvalue = '';
     for (int i = 0; i < dic.entries.length; i++) {
-      if (dic[i] > 0) {
-        keyvalue = dic.entries[i];
+      if (dic.values.elementAt(i) > max) {
+        keyvalue = dic.entries.elementAt(i);
+        max = dic.values.elementAt(i);
       }
     }
     return ('$keyvalue: $max');
   }
 
   //loops through list of cars and gets info, then calls our check
-  void getMostCommon() {
+  String getMostCommon() {
     //does nothing for code other than easy tying
     //and wont mess with the list itself in other parts of the code
     var carList = _DetailListState.cars1;
@@ -329,16 +330,23 @@ class _AnalyticsPageState extends State<Analytics_page> {
       valCheck(car.makemodel, carCounts);
       valCheck(car.package, planCounts);
       valCheck(car.priceestimate, costCounts);
+      //print('this is the counts for $carCounts');
     }
+    //adds most common occurences to list
     resultList.add(getMax(carCounts));
     resultList.add(getMax(costCounts));
     resultList.add(getMax(planCounts));
+
+    return resultList.toString();
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Center(child: Text(resultList.toString()));
+    return Scaffold(
+        appBar: AppBar(
+            backgroundColor: Colors.blue, title: Text('G-hops Analytics')),
+        body: Center(child: Text(getMostCommon())));
   }
 }
 
