@@ -1,6 +1,9 @@
 // Started with https://docs.flutter.dev/development/ui/widgets-intro
 //import 'dart:io';
 
+import 'dart:ffi';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:to_dont_list/to_do_items.dart';
 
@@ -112,7 +115,7 @@ class _DetailListState extends State<DetailList> {
 
   int PriceEstimateText = 0;
 
-  final List<Car> cars1 = [
+  static final List<Car> cars1 = [
     const Car(makemodel: "Nissan Example", package: "Ex: 1", priceestimate: 100)
   ];
 //Need to find a way to display all text across banner rather than just 1st text
@@ -177,6 +180,16 @@ class _DetailListState extends State<DetailList> {
       return totalCash / totalDetails;
     }
     return 0;
+  }
+
+  //sends to analytics page
+  void _toAnalyticsPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const Analytics_page(),
+      ),
+    );
   }
 
   Future<void> _averageDetail(BuildContext context) async {
@@ -248,6 +261,13 @@ class _DetailListState extends State<DetailList> {
               onPressed: () {
                 _averageDetail(context);
               },
+            ),
+
+            //press this button and takes to analytics page
+            ElevatedButton(
+              key: const Key('Analytics'),
+              child: Text('Analytics'),
+              onPressed: _toAnalyticsPage,
             )
           ]),
         ),
@@ -257,6 +277,68 @@ class _DetailListState extends State<DetailList> {
               _displayTextInputDialog(context);
               _detailCounter();
             }));
+  }
+}
+
+//attempt to build analytics page so you can see what's most common
+//amongst cars services, plans pickes, and prices paid
+class Analytics_page extends StatefulWidget {
+  const Analytics_page({super.key});
+
+  @override
+  State createState() => _AnalyticsPageState();
+}
+
+class _AnalyticsPageState extends State<Analytics_page> {
+  //loop through list of - count the most common stuff
+  //will then return a dictionary/widget to house it
+  var carCounts = {};
+  var planCounts = {};
+  var costCounts = {};
+  var resultList = [];
+  //checks if in dic and adds to counter
+  //else initializes in dic
+  void valCheck(val, dic) {
+    if (dic.entries.contains(val)) {
+      dic[val] += 1;
+    } else {
+      dic[val] = 1;
+    }
+  }
+
+  String getMax(dic) {
+    int max = 0;
+    var keyvalue = '';
+    for (int i = 0; i < dic.entries.length; i++) {
+      if (dic[i] > 0) {
+        keyvalue = dic.entries[i];
+      }
+    }
+    return ('$keyvalue: $max');
+  }
+
+  //loops through list of cars and gets info, then calls our check
+  void getMostCommon() {
+    //does nothing for code other than easy tying
+    //and wont mess with the list itself in other parts of the code
+    var carList = _DetailListState.cars1;
+
+    for (int i = 0; i < carList.length; i++) {
+      Car car = carList[i];
+
+      valCheck(car.makemodel, carCounts);
+      valCheck(car.package, planCounts);
+      valCheck(car.priceestimate, costCounts);
+    }
+    resultList.add(getMax(carCounts));
+    resultList.add(getMax(costCounts));
+    resultList.add(getMax(planCounts));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Center(child: Text(resultList.toString()));
   }
 }
 

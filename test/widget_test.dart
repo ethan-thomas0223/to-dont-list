@@ -105,4 +105,13 @@ void main() {
   });
 
   // One to test the tap and press actions on the items?
+
+  testWidgets("Testing functionality of the Analytics button", (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: DetailList()));
+    await tester.pump();
+
+    await tester.tap(find.byKey(const Key("AnalyticsKey")));
+    await tester.pump();
+    expect(find.byKey(const Key("AnalyticsKey")), findsOneWidget);
+  });
 }
