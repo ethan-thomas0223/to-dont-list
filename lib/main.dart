@@ -22,14 +22,14 @@ class ToDoList extends StatefulWidget {
 
 class _ToDoListState extends State<ToDoList> {
   // Dialog with text from https://www.appsdeveloperblog.com/alert-dialog-with-a-text-field-in-flutter/
-  final TextEditingController _inputController = TextEditingController();
-  final TextEditingController _inputController2 = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _urlController = TextEditingController();
   final ButtonStyle yesStyle = ElevatedButton.styleFrom(
-      textStyle: const TextStyle(fontSize: 20), primary: Colors.green);
+      textStyle: const TextStyle(fontSize: 20), backgroundColor: Colors.green);
   final ButtonStyle noStyle = ElevatedButton.styleFrom(
-      textStyle: const TextStyle(fontSize: 20), primary: Colors.red);
+      textStyle: const TextStyle(fontSize: 20), backgroundColor: Colors.red);
   final ButtonStyle iStyle = ElevatedButton.styleFrom(
-      textStyle: const TextStyle(fontSize: 20), primary: Colors.blue);
+      textStyle: const TextStyle(fontSize: 20), backgroundColor: Colors.blue);
 
   late File image;
 
@@ -38,18 +38,31 @@ class _ToDoListState extends State<ToDoList> {
     return showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
+          return AlertDialog( //alert dialogue shows two text fields.
             title: const Text('Image Description'),
-            content: TextField(
-              onChanged: (value) {
-                setState(() {
-                  valueText = value;
-                });
-              },
-              controller: _inputController,
-              decoration:
-                  const InputDecoration(hintText: "type something here"),
-            ),
+            content: Column(children: <Widget>[
+              TextField(
+                key: const Key("descriptionTextField"),
+                onChanged: (value) {
+                  setState(() {
+                    descriptionText = value;
+                  });
+                },
+                controller: _descriptionController,
+                decoration:
+                    const InputDecoration(label: Text("Type Description Here")),
+              ),
+              TextField(
+                key: const Key("urlTextField"),
+                onChanged: (value) {
+                  setState(() {
+                    urlText = value;
+                  });
+                },
+                controller: _urlController,
+                decoration: const InputDecoration(label: Text("Type URL Here")),
+              )
+            ]),
             actions: <Widget>[
               ElevatedButton(
                 key: const Key("CancelButton"),
@@ -57,18 +70,16 @@ class _ToDoListState extends State<ToDoList> {
                 child: const Text('Cancel'),
                 onPressed: () {
                   setState(() {
-                    //These 2 lines fail the test not sure why
-                    //_handleNewItem(valueText);
                     Navigator.pop(context);
-                    //Not sure why defaultRouteName works here, feels like the route should be specified
-                    //Navigator.pushNamed(context, Navigator.defaultRouteName);
+                    _urlController.clear();
+                    _descriptionController.clear();
                   });
                 },
               ),
 
               // https://stackoverflow.com/questions/52468987/how-to-turn-disabled-button-into-enabled-button-depending-on-conditions
               ValueListenableBuilder<TextEditingValue>(
-                valueListenable: _inputController,
+                valueListenable: _descriptionController,
                 builder: (context, value, child) {
                   return ElevatedButton(
                     key: const Key("OKButton"),
@@ -76,7 +87,7 @@ class _ToDoListState extends State<ToDoList> {
                     onPressed: value.text.isNotEmpty
                         ? () {
                             setState(() {
-                              _handleNewItem(valueText, vtext);
+                              _handleNewItem(descriptionText, urlText);
                               Navigator.pop(context);
                             });
                           }
@@ -85,64 +96,13 @@ class _ToDoListState extends State<ToDoList> {
                   );
                 },
               ),
-              ValueListenableBuilder(
-                  valueListenable: _inputController,
-                  builder: (context, value, child) {
-                    return ElevatedButton(
-                      style: iStyle,
-                      key: const Key('imageButton'),
-                      onPressed: //valueText.isNotEmpty
-                          () {
-                        showDialog(
-                          context: context,
-                          builder: ((context2) {
-                            return AlertDialog(
-                              title: const Text('Image Url'),
-                              content: TextField(
-                                onChanged: (value2) {
-                                  setState(() {
-                                    vtext = value2;
-                                  });
-                                },
-                                controller: _inputController,
-                                decoration: const InputDecoration(
-                                    hintText: "type something here"),
-                              ),
-                              actions: <Widget>[
-                                ValueListenableBuilder(
-                                  valueListenable: _inputController2,
-                                  builder: (context2, value2, child) {
-                                    return ElevatedButton(
-                                        style: iStyle,
-                                        key: const Key('ImageURL'),
-                                        onPressed: //vtext.isNotEmpty
-                                            () {
-                                          //_handleNewPic(vtext);
-                                          Navigator.pop(context);
-                                        },
-                                        //: null,
-                                        child: const Text('Select'));
-                                  },
-                                )
-                              ],
-                            );
-                          }),
-                        );
-
-                        //_handleNewItem(valueText);
-                        //Navigator.pop(context);
-                      },
-                      //: null,
-                      child: const Text('Image'),
-                    );
-                  })
             ],
           );
         });
   }
 
-  String valueText = "";
-  String vtext = "";
+  String descriptionText = "";
+  String urlText = "";
 
   final List<Item> items = [
     Item(
@@ -187,7 +147,8 @@ class _ToDoListState extends State<ToDoList> {
 
       Item item = Item(name: itemText, url: itemUrl);
       items.insert(0, item);
-      _inputController.clear();
+      _descriptionController.clear();
+      _urlController.clear();
     });
   }
 
@@ -198,7 +159,8 @@ class _ToDoListState extends State<ToDoList> {
       //doesn't like this
       //items.insert(0, pic as Item);
       pic.insert(0, pic);
-      _inputController.clear();
+      _descriptionController.clear();
+      _urlController.clear();
     });
   }
 
