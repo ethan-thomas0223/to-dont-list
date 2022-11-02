@@ -146,6 +146,7 @@ class _ToDoListState extends State<ToDoList> {
       Item item = Item(name: itemText, url: itemUrl);
       items.insert(0, item);
       _descriptionController.clear();
+      _urlController.clear();
     });
   }
 
@@ -157,6 +158,7 @@ class _ToDoListState extends State<ToDoList> {
       //items.insert(0, pic as Item);
       pic.insert(0, pic);
       _descriptionController.clear();
+      _urlController.clear();
     });
   }
 
