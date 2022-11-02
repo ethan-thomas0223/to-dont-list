@@ -60,11 +60,10 @@ class ToDoListItem extends StatelessWidget {
         onTap: () {
           onListChanged(item, completed);
         },
-        onLongPress: completed
-            ? () {
+        onLongPress: 
+             () {
                 onDeleteItem(item);
-              }
-            : null,
+              },
         leading: CircleAvatar(
           backgroundColor: _getColor(context),
           child: Text(item.abbrev()),
