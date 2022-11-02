@@ -22,14 +22,14 @@ class ToDoList extends StatefulWidget {
 
 class _ToDoListState extends State<ToDoList> {
   // Dialog with text from https://www.appsdeveloperblog.com/alert-dialog-with-a-text-field-in-flutter/
-  final TextEditingController _inputController = TextEditingController();
-  final TextEditingController _inputController2 = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _urlController = TextEditingController();
   final ButtonStyle yesStyle = ElevatedButton.styleFrom(
-      textStyle: const TextStyle(fontSize: 20), primary: Colors.green);
+      textStyle: const TextStyle(fontSize: 20), backgroundColor: Colors.green);
   final ButtonStyle noStyle = ElevatedButton.styleFrom(
-      textStyle: const TextStyle(fontSize: 20), primary: Colors.red);
+      textStyle: const TextStyle(fontSize: 20), backgroundColor: Colors.red);
   final ButtonStyle iStyle = ElevatedButton.styleFrom(
-      textStyle: const TextStyle(fontSize: 20), primary: Colors.blue);
+      textStyle: const TextStyle(fontSize: 20), backgroundColor: Colors.blue);
 
   late File image;
 
@@ -46,7 +46,7 @@ class _ToDoListState extends State<ToDoList> {
                   valueText = value;
                 });
               },
-              controller: _inputController,
+              controller: _descriptionController,
               decoration:
                   const InputDecoration(hintText: "type something here"),
             ),
@@ -68,7 +68,7 @@ class _ToDoListState extends State<ToDoList> {
 
               // https://stackoverflow.com/questions/52468987/how-to-turn-disabled-button-into-enabled-button-depending-on-conditions
               ValueListenableBuilder<TextEditingValue>(
-                valueListenable: _inputController,
+                valueListenable: _descriptionController,
                 builder: (context, value, child) {
                   return ElevatedButton(
                     key: const Key("OKButton"),
@@ -86,7 +86,7 @@ class _ToDoListState extends State<ToDoList> {
                 },
               ),
               ValueListenableBuilder(
-                  valueListenable: _inputController,
+                  valueListenable: _descriptionController,
                   builder: (context, value, child) {
                     return ElevatedButton(
                       style: iStyle,
@@ -104,13 +104,13 @@ class _ToDoListState extends State<ToDoList> {
                                     vtext = value2;
                                   });
                                 },
-                                controller: _inputController,
+                                controller: _descriptionController,
                                 decoration: const InputDecoration(
                                     hintText: "type something here"),
                               ),
                               actions: <Widget>[
                                 ValueListenableBuilder(
-                                  valueListenable: _inputController2,
+                                  valueListenable: _urlController,
                                   builder: (context2, value2, child) {
                                     return ElevatedButton(
                                         style: iStyle,
@@ -187,7 +187,7 @@ class _ToDoListState extends State<ToDoList> {
 
       Item item = Item(name: itemText, url: itemUrl);
       items.insert(0, item);
-      _inputController.clear();
+      _descriptionController.clear();
     });
   }
 
@@ -198,7 +198,7 @@ class _ToDoListState extends State<ToDoList> {
       //doesn't like this
       //items.insert(0, pic as Item);
       pic.insert(0, pic);
-      _inputController.clear();
+      _descriptionController.clear();
     });
   }
 
