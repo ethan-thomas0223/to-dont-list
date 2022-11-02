@@ -44,7 +44,7 @@ class _ToDoListState extends State<ToDoList> {
               TextField(
                 onChanged: (value) {
                   setState(() {
-                    valueText = value;
+                    descriptionText = value;
                   });
                 },
                 controller: _descriptionController,
@@ -54,7 +54,7 @@ class _ToDoListState extends State<ToDoList> {
               TextField(
                 onChanged: (value) {
                   setState(() {
-                    vtext = value;
+                    urlText = value;
                   });
                 },
                 controller: _urlController,
@@ -85,7 +85,7 @@ class _ToDoListState extends State<ToDoList> {
                     onPressed: value.text.isNotEmpty
                         ? () {
                             setState(() {
-                              _handleNewItem(valueText, vtext);
+                              _handleNewItem(descriptionText, urlText);
                               Navigator.pop(context);
                             });
                           }
@@ -99,8 +99,8 @@ class _ToDoListState extends State<ToDoList> {
         });
   }
 
-  String valueText = "";
-  String vtext = "";
+  String descriptionText = "";
+  String urlText = "";
 
   final List<Item> items = [
     Item(
