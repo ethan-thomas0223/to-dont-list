@@ -38,10 +38,11 @@ class _ToDoListState extends State<ToDoList> {
     return showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
+          return AlertDialog( //alert dialogue shows two text fields.
             title: const Text('Image Description'),
             content: Column(children: <Widget>[
               TextField(
+                key: const Key("descriptionTextField"),
                 onChanged: (value) {
                   setState(() {
                     descriptionText = value;
@@ -52,6 +53,7 @@ class _ToDoListState extends State<ToDoList> {
                     const InputDecoration(label: Text("Type Description Here")),
               ),
               TextField(
+                key: const Key("urlTextField"),
                 onChanged: (value) {
                   setState(() {
                     urlText = value;
