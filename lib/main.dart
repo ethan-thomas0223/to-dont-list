@@ -311,15 +311,18 @@ class _AnalyticsPageState extends State<Analytics_page> {
     var keyvalue = '';
     for (int i = 0; i < dic.entries.length; i++) {
       if (dic.values.elementAt(i) > max) {
-        keyvalue = dic.entries.elementAt(i);
+        //this sets the keyvalue to the mapvalue, needs to just be a string
+        //keyvalue = dic.entries.elementAt(i).toString();
+        var kv = dic.entries.elementAt(i);
+        keyvalue = '$kv';
         max = dic.values.elementAt(i);
       }
     }
-    return ('$keyvalue: $max');
+    return ('$keyvalue');
   }
 
   //loops through list of cars and gets info, then calls our check
-  String getMostCommon() {
+  getMostCommon() {
     //does nothing for code other than easy tying
     //and wont mess with the list itself in other parts of the code
     var carList = _DetailListState.cars1;
@@ -328,16 +331,18 @@ class _AnalyticsPageState extends State<Analytics_page> {
       Car car = carList[i];
 
       valCheck(car.makemodel, carCounts);
-      valCheck(car.package, planCounts);
-      valCheck(car.priceestimate, costCounts);
+      valCheck(car.package, costCounts);
+      valCheck(car.priceestimate, planCounts);
       //print('this is the counts for $carCounts');
     }
     //adds most common occurences to list
-    resultList.add(getMax(carCounts));
-    resultList.add(getMax(costCounts));
-    resultList.add(getMax(planCounts));
-
-    return resultList.toString();
+    var result = (getMax(carCounts) + getMax(costCounts) + getMax(planCounts));
+    // resultList.add(getMax(carCounts));
+    // resultList.add(getMax(costCounts));
+    // resultList.add(getMax(planCounts));
+    resultList.add(result);
+    //return resultList.last.toString();
+    return resultList.last;
   }
 
   @override
