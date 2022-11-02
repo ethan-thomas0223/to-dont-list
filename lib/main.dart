@@ -40,16 +40,28 @@ class _ToDoListState extends State<ToDoList> {
         builder: (context) {
           return AlertDialog(
             title: const Text('Image Description'),
-            content: TextField(
-              onChanged: (value) {
-                setState(() {
-                  valueText = value;
-                });
-              },
-              controller: _descriptionController,
-              decoration:
-                  const InputDecoration(hintText: "type something here"),
-            ),
+            content: Column(children: <Widget>[
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    valueText = value;
+                  });
+                },
+                controller: _descriptionController,
+                decoration:
+                    const InputDecoration(label: Text("Type Description Here")),
+              ),
+              TextField(
+                onChanged: (value) {
+                  setState(() {
+                    vtext = value;
+                  });
+                },
+                controller: _urlController,
+                decoration: const InputDecoration(label: Text("Type URL Here")),
+              )
+            ])
+            ,
             actions: <Widget>[
               ElevatedButton(
                 key: const Key("CancelButton"),
