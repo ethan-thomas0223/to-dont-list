@@ -303,8 +303,6 @@ class _AnalyticsPageState extends State<Analytics_page> {
     if (dic.entries.contains(val)) {
       dic[val] += 1;
     } else {
-      //type 'String' is not a subtype of type 'int' of 'key' error flutter
-      //_TypeError (type 'int' is not a subtype of type 'String' of 'key')
       dic[val] = 1;
     }
   }
@@ -315,12 +313,7 @@ class _AnalyticsPageState extends State<Analytics_page> {
     var keyvalue = '';
     for (int i = 0; i < dic.entries.length; i++) {
       if (dic.values.elementAt(i) > max) {
-        //this sets the keyvalue to the mapvalue ('MapEntry(car:1)MapEntry(2:1)MapEntry(100:1)')
-        //needs to just be a string
-        //keyvalue = dic.entries.elementAt(i).toString();
-        //var kv = dic.entries.elementAt(i);
         keyvalue = '${dic.keys.elementAt(i)}';
-        //keyvalue = '$kv';
         max = dic.values.elementAt(i);
       }
     }
@@ -339,7 +332,6 @@ class _AnalyticsPageState extends State<Analytics_page> {
       valCheck(car.makemodel, carCounts);
       valCheck(car.package, planCounts);
       valCheck(car.priceestimate, costCounts);
-      //print('this is the counts for $carCounts');
     }
     //adds most common occurences to list
     var result =
