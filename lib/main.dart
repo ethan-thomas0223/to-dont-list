@@ -281,7 +281,7 @@ class _DetailListState extends State<DetailList> {
 }
 
 //attempt to build analytics page so you can see what's most common
-//amongst cars services, plans pickes, and prices paid
+//amongst cars serviced, plans picked, and prices paid
 class Analytics_page extends StatefulWidget {
   const Analytics_page({super.key});
 
@@ -292,29 +292,35 @@ class Analytics_page extends StatefulWidget {
 class _AnalyticsPageState extends State<Analytics_page> {
   //loop through list of - count the most common stuff
   //will then return a dictionary/widget to house it
-  static var carCounts = {};
-  static var planCounts = {};
-  static var costCounts = {};
-  static var resultList = [];
-  //checks if in dic and adds to counter
+  static Map<String, int> carCounts = {};
+  static Map<String, int> planCounts = {};
+  static Map<int, int> costCounts = {};
+  static List<String> resultList = [];
+
+  //checks if value (String or int) in dic and adds to counter
   //else initializes in dic
-  void valCheck(val, dic) {
+  void valCheck(dynamic val, Map<dynamic, dynamic> dic) {
     if (dic.entries.contains(val)) {
       dic[val] += 1;
     } else {
+      //type 'String' is not a subtype of type 'int' of 'key' error flutter
+      //_TypeError (type 'int' is not a subtype of type 'String' of 'key')
       dic[val] = 1;
     }
   }
 
-  String getMax(dic) {
+  //loops through dic, finds most common occurrence and returns it as a String
+  String getMax(Map dic) {
     int max = 0;
     var keyvalue = '';
     for (int i = 0; i < dic.entries.length; i++) {
       if (dic.values.elementAt(i) > max) {
-        //this sets the keyvalue to the mapvalue, needs to just be a string
+        //this sets the keyvalue to the mapvalue ('MapEntry(car:1)MapEntry(2:1)MapEntry(100:1)')
+        //needs to just be a string
         //keyvalue = dic.entries.elementAt(i).toString();
-        var kv = dic.entries.elementAt(i);
-        keyvalue = '$kv';
+        //var kv = dic.entries.elementAt(i);
+        keyvalue = '${dic.keys.elementAt(i)}';
+        //keyvalue = '$kv';
         max = dic.values.elementAt(i);
       }
     }
@@ -331,15 +337,14 @@ class _AnalyticsPageState extends State<Analytics_page> {
       Car car = carList[i];
 
       valCheck(car.makemodel, carCounts);
-      valCheck(car.package, costCounts);
-      valCheck(car.priceestimate, planCounts);
+      valCheck(car.package, planCounts);
+      valCheck(car.priceestimate, costCounts);
       //print('this is the counts for $carCounts');
     }
     //adds most common occurences to list
-    var result = (getMax(carCounts) + getMax(costCounts) + getMax(planCounts));
-    // resultList.add(getMax(carCounts));
-    // resultList.add(getMax(costCounts));
-    // resultList.add(getMax(planCounts));
+    var result =
+        ('Common Car:${getMax(carCounts)} Common Cost:${getMax(costCounts)} Common Plan:${getMax(planCounts)}');
+
     resultList.add(result);
     //return resultList.last.toString();
     return resultList.last;
