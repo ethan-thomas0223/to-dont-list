@@ -5,6 +5,8 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -22,9 +24,11 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: Scaffold(
             body: SquirrelItem(
-                item: const Squirrel(name: "test", price: 4),
-                sold: true,
-                onListChanged: (Squirrel item, bool completed) {}))));
+      item: const Squirrel(name: "test", price: 4),
+      sold: true,
+      onListChanged: (Squirrel item, bool completed) {},
+      onPriceIncrease: (Squirrel item) {},
+    ))));
     final textFinder = find.text('test');
 
     // Use the `findsOneWidget` matcher provided by flutter_test to verify
@@ -37,9 +41,11 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: Scaffold(
             body: SquirrelItem(
-                item: const Squirrel(name: "test", price: 0),
-                sold: false,
-                onListChanged: (Squirrel item, bool sold) {}))));
+      item: const Squirrel(name: "test", price: 0),
+      sold: false,
+      onListChanged: (Squirrel item, bool sold) {},
+      onPriceIncrease: (Squirrel item) {},
+    ))));
     final abbvFinder = find.text('t');
     final avatarFinder = find.byType(CircleAvatar);
 
@@ -66,11 +72,13 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: Scaffold(
             body: SquirrelItem(
-                item: const Squirrel(name: "test", price: 10),
-                sold: false,
-                onListChanged: (Squirrel item, bool sold) {}))));
+      item: const Squirrel(name: "test", price: 10),
+      sold: false,
+      onListChanged: (Squirrel item, bool sold) {},
+      onPriceIncrease: (Squirrel item) {},
+    ))));
     final nameFinder = find.text("test");
-    final priceFinder = find.text("10");
+    final priceFinder = find.text("10.0");
 
     expect(nameFinder, findsOneWidget);
     expect(priceFinder, findsOneWidget);
