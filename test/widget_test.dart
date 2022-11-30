@@ -13,7 +13,7 @@ import 'package:to_dont_list/to_do_items.dart';
 
 void main() {
   test('Item abbreviation should be first letter', () {
-    const item = Item(name: "add more todos");
+    Item item = Item(name: "add more todos", catList: []);
     expect(item.abbrev(), "a");
   });
 
@@ -22,8 +22,9 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: Scaffold(
             body: ToDoListItem(
-                item: const Item(name: "test"),
+                item: Item(name: "test", catList: []),
                 completed: true,
+                catList: [],
                 onListChanged: (Item item, bool completed) {},
                 onDeleteItem: (Item item) {}))));
     final textFinder = find.text('test');
@@ -37,8 +38,9 @@ void main() {
     await tester.pumpWidget(MaterialApp(
         home: Scaffold(
             body: ToDoListItem(
-                item: const Item(name: "test"),
+                item: Item(name: "test", catList: []),
                 completed: true,
+                catList: [],
                 onListChanged: (Item item, bool completed) {},
                 onDeleteItem: (Item item) {}))));
     final avatarFinder = find.byType(CircleAvatar);
@@ -78,51 +80,26 @@ void main() {
     expect(listItemFinder, findsNWidgets(2));
   });
 
-  testWidgets("Unit test for the new TextField", (tester) async {
+  testWidgets('Tapping and typing adds a cat to location item', (tester) async {
+    // this tests the functionality of everything I added
     await tester.pumpWidget(const MaterialApp(home: ToDoList()));
+
+    // could add a tester to add an item here, but I start with an item already in there called "Brick Pit"
+
+    //enters a cat with name 'cat name' to a list item
+    await tester.tap(find.byType(ListTile));
+    await tester.pump();
+    await tester.enterText(find.byType(TextField), 'cat name');
+    await tester.tap(find.byKey(const Key("OKButtonCat")));
     await tester.pump();
 
-    await tester.tap(find.byKey(const Key("TextInput")));
-    await tester.pump();
-
-    expect(find.byKey(const Key("Thought Key")), findsOneWidget);
+    // expects to find the name in a list item
+    expect(find.text("cat name"), findsOneWidget);
   });
 
-  // One to test the tap and press actions on the items?
-  // I can also make this unit test work!
-  testWidgets("Testing the floating action buttons on the main page",
-      (tester) async {
-    await tester.pumpWidget(const MaterialApp(home: ToDoList()));
-    await tester.pump();
-
-    await tester.tap(find.byKey(const Key("Increment")));
-    await tester.pump();
-
-    expect(find.byKey(const Key("Increment")), findsOneWidget);
-
-    await tester.tap(find.byKey(const Key("Decrement")));
-    await tester.pump();
-
-    expect(find.byKey(const Key("Decrement")), findsOneWidget);
-  });
-
-  testWidgets("Testing the floating action buttons in the text field page",
-      (tester) async {
-    await tester.pumpWidget(const MaterialApp(home: ToDoList()));
-    await tester.pump();
-
-    await tester.tap(find.byKey(const Key("TextInput")));
-    await tester.pump();
-
-    expect(find.byKey(const Key("Pointsgood")), findsOneWidget);
-    await tester.tap(find.byKey(const Key("Pointsgood")));
-    await tester.pump();
-
-    await tester.tap(find.byKey(const Key("TextInput")));
-    await tester.pump();
-
-    expect(find.byKey(const Key("Pointsbad")), findsOneWidget);
-    await tester.tap(find.byKey(const Key("Pointsbad")));
-    await tester.pump();
+  test('catsString transforms catList into a comma-separated string', () {
+    Item item =
+        Item(name: "item name", catList: ['Ella', 'Oliver', 'Dustbunny']);
+    expect(item.catsString(), "Ella, Oliver, Dustbunny");
   });
 }

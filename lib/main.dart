@@ -1,5 +1,7 @@
 // cool thought s you have about your pet cat that you want to record into an app
 // Started with https://docs.flutter.dev/development/ui/widgets-intro
+import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:to_dont_list/assets/thoughticon.dart';
 import 'package:to_dont_list/to_do_items.dart';
@@ -42,7 +44,7 @@ class _ToDoListState extends State<ToDoList> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Thought To Add'),
+            title: const Text('Add a Location'),
             content: TextField(
               key: const Key("Thought Key"),
               maxLines:
@@ -53,63 +55,31 @@ class _ToDoListState extends State<ToDoList> {
                 });
               },
               controller: _inputController,
-              decoration: const InputDecoration(hintText: "type it out here"),
+              decoration: const InputDecoration(hintText: "type location here"),
             ),
             actions: <Widget>[
               ElevatedButton(
                 key: const Key("OKButton"),
                 style: yesStyle,
-                child: const Text('Meow'),
                 onPressed: () {
                   setState(() {
                     _handleNewItem(valueText);
                     Navigator.pop(context);
+                    //valueText = "";
                   });
                 },
+                child: const Text('Ok'),
               ),
               ElevatedButton(
-                key: const Key("Pointsgood"),
-                style: yesStyle,
-                child: const Text('Good'),
                 onPressed: () {
                   setState(() {
-                    _incrementCounter();
-                    //Navigator.pop(context);
+                    Navigator.pop(context);
+                    _inputController.clear();
                   });
                 },
-              ),
-              ElevatedButton(
-                key: const Key("Pointsbad"),
-                style: yesStyle,
-                child: const Text('Bad'),
-                onPressed: () {
-                  setState(() {
-                    _decrementCounter();
-
-                    //Navigator.pop(context);
-                  });
-                },
-              ),
-
-              // https://stackoverflow.com/questions/52468987/how-to-turn-disabled-button-into-enabled-button-depending-on-conditions
-              ValueListenableBuilder<TextEditingValue>(
-                valueListenable: _inputController,
-                builder: (context, value, child) {
-                  return ElevatedButton(
-                    key: const Key("CancelButton"),
-                    style: noStyle,
-                    onPressed: value.text.isNotEmpty
-                        ? () {
-                            setState(() {
-                              _handleNewItem(valueText);
-                              Navigator.pop(context);
-                            });
-                          }
-                        : null,
-                    child: const Text('Cancel'),
-                  );
-                },
-              ),
+                style: noStyle,
+                child: const Text('Cancel'),
+              )
             ],
           );
         });
@@ -117,9 +87,19 @@ class _ToDoListState extends State<ToDoList> {
 
   String valueText = "";
 
-  final List<Item> items = [const Item(name: "add more cool cat things")];
+  //starts with one item in the list:  "Brick Pit"
+  final List<Item> items = [
+    Item(
+        name: "Brick Pit",
+        catList: [],
+        imageP:
+            "https://i.pinimg.com/564x/22/71/48/22714827862d17e1a1a78bd344bfc5fc.jpg")
+  ];
 
   final _itemSet = <Item>{};
+
+  //most of this is commented out from the original to-do list
+  //if I want to remove an item or have a strikethrough, I could uncomment
 
   void _handleListChanged(Item item, bool completed) {
     setState(() {
@@ -129,17 +109,72 @@ class _ToDoListState extends State<ToDoList> {
       // The framework then calls build, below,
       // which updates the visual appearance of the app.
 
-      items.remove(item);
-      if (!completed) {
-        print("Completing");
-        _itemSet.add(item);
-        items.add(item);
-      } else {
-        print("Making Undone");
-        _itemSet.remove(item);
-        items.insert(0, item);
-      }
+      //items.remove(item);
+      //if (!completed) {
+      //  print("Completing");
+      //  _itemSet.add(item);
+      //  items.add(item);
+      //} else {
+      //  print("Making Undone");
+      //  _itemSet.remove(item);
+      //  items.insert(0, item);
+      //}
+
+      _displayCatInput(context, item);
     });
+  }
+
+  void _handleAddCat(Item item, String name) {
+    item.catList.add(name);
+    _inputController.clear();
+  }
+
+  //adds a cat to one item in the list
+  //the list is displayed as a subtitle underneath the item
+  Future<void> _displayCatInput(BuildContext context, Item item) async {
+    print("Loading Cat Dialog");
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+              title: const Text('Add a Cat'),
+              content: TextField(
+                onChanged: (value) {
+                  setState(() {
+                    valueText = value;
+                  });
+                },
+                controller: _inputController,
+                decoration:
+                    const InputDecoration(hintText: "type cat name here"),
+              ),
+              //child: Image.asset('images/cat.png'),
+              actions: <Widget>[
+                ElevatedButton(
+                  key: const Key("OKButtonCat"),
+                  style: yesStyle,
+                  onPressed: () {
+                    setState(() {
+                      //new cat added to an item on the list
+                      _handleAddCat(item, valueText);
+                      Navigator.pop(context);
+                      //valueText = "";
+                    });
+                  },
+                  child: const Text('Ok'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      Navigator.pop(context);
+                      _inputController.clear();
+                    });
+                  },
+                  style: noStyle,
+                  child: const Text('Cancel'),
+                )
+              ]);
+        });
   }
 
   void _handleDeleteItem(Item item) {
@@ -149,87 +184,71 @@ class _ToDoListState extends State<ToDoList> {
     });
   }
 
+  //adding a new item to the list with an empty cat list
   void _handleNewItem(String itemText) {
     setState(() {
       print("Adding new item");
-      Item item = Item(name: itemText);
+      Item item = Item(name: itemText, catList: [], imageP: newCatImage());
       items.insert(0, item);
       _inputController.clear();
     });
   }
 
+  String newCatImage() {
+    List<String> assets = [
+      "https://i.pinimg.com/564x/22/71/48/22714827862d17e1a1a78bd344bfc5fc.jpg",
+      "https://i.pinimg.com/564x/e1/9f/47/e19f4768a10c3f399fd5ba92fc4186eb.jpg",
+      "https://i.pinimg.com/564x/78/69/72/786972cceb9f7bf266778a5775848b12.jpg",
+      "https://i.pinimg.com/564x/08/94/bc/0894bcf8403d83d0ee3eb6292aba11b7.jpg",
+      "https://i.pinimg.com/564x/1f/80/3a/1f803a87bfed8f5642d8c74444a137f4.jpg",
+      "https://i.pinimg.com/564x/bb/57/1a/bb571ae2c97458708155956fa5f2801e.jpg",
+      "https://i.pinimg.com/736x/7e/6a/6e/7e6a6edd9edea50c1273a6eb81d05ae9.jpg",
+      "https://i.pinimg.com/564x/8c/4a/51/8c4a51e005629a084505649079b0a949.jpg",
+      "https://i.pinimg.com/564x/e2/25/37/e2253703557b7e6477e32891be4c667e.jpg",
+    ];
+    assets.shuffle();
+    print(assets[0]);
+    return assets[0];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Thoughts about your pet cat'),
-      ),
-
-      //Found how to add all the buttons here: https://www.fluttercampus.com/guide/19/how-to-add-multiple-floating-action-buttons-in-one-screen-flutter-app/#:~:text=How%20to%20Add%20Multiple%20Floating%20Action%20Buttons%20in,%28%29%20widget%20to%20add%20multiple%20floating%20action%20buttons.
-      floatingActionButton: Wrap(
-        //will break to another line on overflow
-        direction: Axis.vertical, //use vertical to show  on vertical axis
-        children: <Widget>[
-          Container(
-            child: const Text(
-              "Number of good days with cat",
-            ),
-          ),
-          Container(
-              child: Text(
-            '$_counter',
-          )),
-          Container(
-              margin: EdgeInsets.all(10),
-              child: FloatingActionButton(
-                key: const Key("TextInput"),
-                onPressed: () {
-                  _displayTextInputDialog(context);
-                  //action code for button 1
-                },
-                child: const Icon(FlutterThought.thought), // my icon
-              )), //button first
-
-          Container(
-              margin: EdgeInsets.all(10),
-              child: FloatingActionButton(
-                  //added key for unit test
-                  key: const Key("Increment"),
-                  onPressed: _incrementCounter,
-                  backgroundColor: Colors.deepPurpleAccent,
-                  child: Icon(Icons.exposure_plus_1))), // button second
-
-          Container(
-              margin: EdgeInsets.all(10),
-              child: FloatingActionButton(
-                //added key for unit test
-                key: const Key("Decrement"),
-                onPressed: _decrementCounter,
-                backgroundColor: Colors.deepOrangeAccent,
-                child: Icon(Icons.exposure_minus_1),
-              )), // button third
-
-          // Add more buttons here
-        ],
-      ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        children: items.map((item) {
-          return ToDoListItem(
-            item: item,
-            completed: _itemSet.contains(item),
-            onListChanged: _handleListChanged,
-            onDeleteItem: _handleDeleteItem,
-          );
-        }).toList(),
-      ),
-    );
+        appBar: AppBar(
+          title: const Text('Hendrix Cats'),
+          backgroundColor: Colors.orange,
+        ),
+        body: ListView(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          children: items.map((item) {
+            return ToDoListItem(
+              item: item,
+              completed: _itemSet.contains(item),
+              onListChanged: _handleListChanged,
+              onDeleteItem: _handleDeleteItem,
+              catList: [],
+              //newCat: _newCat(),
+            );
+          }).toList(),
+        ),
+        floatingActionButton: FloatingActionButton(
+            child: const Icon(Icons.add),
+            onPressed: () {
+              _displayTextInputDialog(context);
+            }));
   }
 }
 
 void main() {
-  runApp(const MaterialApp(
-    title: 'Thoughts about Pet recorder',
+  runApp(MaterialApp(
+    title: 'Hendrix Cats',
+    theme: ThemeData(
+      brightness: Brightness.light,
+    ),
+    darkTheme: ThemeData(
+      brightness: Brightness.dark,
+    ),
+    themeMode: ThemeMode.dark,
     home: ToDoList(),
   ));
 }
