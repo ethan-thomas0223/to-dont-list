@@ -211,6 +211,57 @@ class _ToDoListState extends State<ToDoList> {
     return assets[0];
   }
 
+  String getMostCommonCat() {
+    Map<String, int> dic = {};
+    for (int i = 0; i < items.length; i++) {
+      for (int j = 0; j < items[i].catList.length; j++) {
+        if (dic.keys.contains(items[i].catList[j])) {
+          dic[items[i].catList[j]] = 1;
+        } else {
+          dic[items[i].catList[j]]! + 1;
+        }
+      }
+    }
+    String mc = '';
+    int max = 0;
+    for (int i = 0; i < dic.length; i++) {
+      if (dic.values.elementAt(i) > max) {
+        mc = dic.entries.elementAt(i) as String;
+        max = dic.values.elementAt(i);
+      }
+    }
+    return mc;
+  }
+
+  //build an alert dialouge with more cat info
+  Future<void> _commonCat(BuildContext context) async {
+    print("Loading Most Common Cat");
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Common Cat'),
+            content: SizedBox(
+              width: 100,
+              height: 60,
+              child: Text("The Most Common Cat is $getMostCommonCat()"),
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                key: const Key("OKButton"),
+                style: yesStyle,
+                child: const Text('Leave'),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -230,6 +281,13 @@ class _ToDoListState extends State<ToDoList> {
               //newCat: _newCat(),
             );
           }).toList(),
+        ),
+        endDrawer: ElevatedButton(
+          key: const Key("AverageKey"),
+          child: const Text("Average Detail Price"),
+          onPressed: () {
+            _commonCat(context);
+          },
         ),
         floatingActionButton: FloatingActionButton(
             child: const Icon(Icons.add),
