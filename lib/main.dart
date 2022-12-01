@@ -214,19 +214,27 @@ class _ToDoListState extends State<ToDoList> {
   String getMostCommonCat() {
     Map<String, int> dic = {};
     for (int i = 0; i < items.length; i++) {
+      //print(i);
+      //print(items[i].catList);
       for (int j = 0; j < items[i].catList.length; j++) {
-        if (dic.keys.contains(items[i].catList[j])) {
+        //print(items[i].catList[j]);
+        if (dic.keys.contains(items[i].catList[j]) == false) {
           dic[items[i].catList[j]] = 1;
-        } else {
+          //print(dic);
+        } else if (dic.entries.contains(items[i].catList[j])) {
+          //print(dic);
           dic[items[i].catList[j]]! + 1;
+
+          //dic.entries.contains(items[i].catList[j])
         }
       }
     }
+    //print(dic);
     String mc = '';
     int max = 0;
     for (int i = 0; i < dic.length; i++) {
       if (dic.values.elementAt(i) > max) {
-        mc = dic.entries.elementAt(i) as String;
+        mc = dic.entries.elementAt(i).key as String;
         max = dic.values.elementAt(i);
       }
     }
@@ -244,7 +252,7 @@ class _ToDoListState extends State<ToDoList> {
             content: SizedBox(
               width: 100,
               height: 60,
-              child: Text("The Most Common Cat is $getMostCommonCat()"),
+              child: Text(getMostCommonCat()),
             ),
             actions: <Widget>[
               ElevatedButton(
@@ -283,8 +291,8 @@ class _ToDoListState extends State<ToDoList> {
           }).toList(),
         ),
         endDrawer: ElevatedButton(
-          key: const Key("AverageKey"),
-          child: const Text("Average Detail Price"),
+          key: const Key("MostCommonKey"),
+          child: const Text("Common Cat"),
           onPressed: () {
             _commonCat(context);
           },
