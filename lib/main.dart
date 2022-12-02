@@ -211,6 +211,12 @@ class _ToDoListState extends State<ToDoList> {
     return assets[0];
   }
 
+  //creates a dictionary
+  //loops through list of items and finds the list of cats in those items
+  //loops through the cat list of each item
+  //checks if cat in list is in dic, if so adds to counter else initializes in dic
+  //loops through dic to find key with highest value
+  //returns that key
   String getMostCommonCat() {
     Map<String, int> dic = {};
     for (int i = 0; i < items.length; i++) {
@@ -242,6 +248,8 @@ class _ToDoListState extends State<ToDoList> {
   }
 
   //build an alert dialouge with more cat info
+  //the alert dialouge tells which cat has the most occurences in the list of cats
+  //accessed through hamburger at top right of screen
   Future<void> _commonCat(BuildContext context) async {
     print("Loading Most Common Cat");
     return showDialog(
@@ -290,6 +298,7 @@ class _ToDoListState extends State<ToDoList> {
             );
           }).toList(),
         ),
+        //here is new button
         endDrawer: ElevatedButton(
           key: const Key("MostCommonKey"),
           child: const Text("Common Cat"),
