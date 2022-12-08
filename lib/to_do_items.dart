@@ -1,4 +1,7 @@
 //import 'dart:html';
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -60,10 +63,9 @@ class ToDoListItem extends StatelessWidget {
         onTap: () {
           onListChanged(item, completed);
         },
-        onLongPress: 
-             () {
-                onDeleteItem(item);
-              },
+        onLongPress: () {
+          onDeleteItem(item);
+        },
         leading: CircleAvatar(
           backgroundColor: _getColor(context),
           child: Text(item.abbrev()),
@@ -85,17 +87,23 @@ class Picture extends StatelessWidget {
   //final String url ='https://images.unsplash.com/photo-1532779952550-b8fc9200ed8c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8M3x8fGVufDB8fHx8&w=1000&q=80';
   @override
   Widget build(BuildContext context) {
-    return Image.network(url);
+    if (url.contains('https')) {
+      return Image.network(url);
+    } else {
+      return Image.file(File('to-dont-list\assets\2029165.jpg'));
+    }
+
     //throw UnimplementedError();
   }
 
   void insert(int i, Picture pic) {}
 
   String gUrl() {
-    if (url != null) {
-      return url;
-    } else {
+    if (url == null || url == '') {
       return 'https://www.wallpaperflare.com/laptop-backgrounds-nature-images-1920x1200-night-scenics-nature-wallpaper-qnllv';
+      ;
+    } else {
+      return url;
     }
   }
 }
